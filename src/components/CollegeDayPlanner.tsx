@@ -375,18 +375,18 @@ const CollegeDayPlanner = () => {
     
     return (
       <div className="max-w-7xl mx-auto p-6 planner-bg min-h-screen">
-        <div className="planner-card p-8 mb-6 border-purple-200">
-          <h1 className="text-4xl font-bold gradient-text mb-4">
+        <div className="planner-card p-8 mb-6 border-purple-200 float-animation">
+          <h1 className="text-5xl font-bold gradient-text mb-4">
             📊 Weekly Overview
           </h1>
-          <p className="text-muted-foreground text-lg">Your complete week at a glance</p>
+          <p className="text-muted-foreground text-xl">Your complete week at a glance</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {/* Weekly Stats */}
-          <div className="planner-card p-6 border-blue-200">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <TrendingUp className="mr-3 text-blue-600" size={28} />
+          <div className="planner-card p-8 border-blue-200 glow-pulse">
+            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
+              <TrendingUp className="mr-3" size={32} />
               Weekly Stats
             </h2>
             <div className="space-y-4">
@@ -418,9 +418,9 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Subjects Covered */}
-          <div className="planner-card p-6 border-green-200">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <BookOpen className="mr-3 text-green-600" size={28} />
+          <div className="planner-card p-8 border-green-200 glow-pulse">
+            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
+              <BookOpen className="mr-3" size={32} />
               Subjects This Week
             </h2>
             <div className="space-y-3">
@@ -434,9 +434,9 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Club Activities */}
-          <div className="planner-card p-6 border-purple-200">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <Award className="mr-3 text-purple-600" size={28} />
+          <div className="planner-card p-8 border-purple-200 glow-pulse">
+            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
+              <Award className="mr-3" size={32} />
               Clubs Attended
             </h2>
             <div className="space-y-3">
@@ -451,9 +451,9 @@ const CollegeDayPlanner = () => {
 
           {/* Daily Breakdown */}
           <div className="lg:col-span-2 xl:col-span-3">
-            <div className="planner-card p-6 border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                <Calendar className="mr-3 text-gray-600" size={28} />
+            <div className="planner-card p-8 border-gray-200 float-animation">
+              <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
+                <Calendar className="mr-3" size={32} />
                 Daily Breakdown
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -497,12 +497,12 @@ const CollegeDayPlanner = () => {
         </div>
 
         {/* Back Button */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-12">
           <button
             onClick={() => setSelectedDay('Monday')}
-            className="btn-primary"
+            className="btn-primary text-xl"
           >
-            Back to Schedule
+            ✨ Back to Schedule
           </button>
         </div>
       </div>
@@ -512,31 +512,31 @@ const CollegeDayPlanner = () => {
   return (
     <div className="max-w-7xl mx-auto p-6 planner-bg min-h-screen">
       {/* Header */}
-      <div className="planner-card p-8 mb-6 border-purple-200">
-        <h1 className="text-4xl font-bold gradient-text mb-4">
+      <div className="planner-card p-10 mb-8 border-purple-200 float-animation">
+        <h1 className="text-6xl font-bold gradient-text mb-6">
           📚 My College Day Planner
         </h1>
-        <p className="text-muted-foreground text-lg">Organize your academic life with style and efficiency</p>
+        <p className="text-muted-foreground text-xl">Organize your academic life with style and efficiency ✨</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* Main Schedule Area */}
         <div className="xl:col-span-3">
           {/* Day Selector */}
-          <div className="planner-card p-6 mb-6 border-blue-200">
-            <h2 className="text-2xl font-semibold mb-6 flex items-center">
-              <Calendar className="mr-3 text-blue-600" size={24} />
+          <div className="planner-card p-8 mb-8 border-blue-200 glow-pulse">
+            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
+              <Calendar className="mr-4" size={32} />
               Select Day
             </h2>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-4">
               {days.map(day => (
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  className={`px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-filter backdrop-blur-10 border ${
                     selectedDay === day
-                      ? 'btn-primary transform scale-105'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                      ? 'btn-primary transform scale-110'
+                      : 'bg-white/60 text-foreground border-white/30 hover:bg-white/80 hover:scale-105 hover:shadow-lg'
                   }`}
                 >
                   {day}
@@ -546,14 +546,14 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Schedule Display */}
-          <div className="planner-card border-gray-200">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-semibold flex items-center">
-                <Clock className="mr-3 text-purple-600" size={24} />
-                {selectedDay} Schedule
+          <div className="planner-card border-gray-200 float-animation">
+            <div className="p-8 border-b border-white/20">
+              <h2 className="text-3xl font-bold gradient-text flex items-center">
+                <Clock className="mr-4" size={32} />
+                {selectedDay} Schedule ✨
               </h2>
             </div>
-            <div className="h-96 overflow-y-auto p-6">
+            <div className="h-96 overflow-y-auto p-8">
               <div className="space-y-3">
                 {getAllScheduleItems().map((item, idx) => (
                   <div key={item.id}>
@@ -706,14 +706,14 @@ const CollegeDayPlanner = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Add New Lecture */}
-          <div className="planner-card p-6 border-blue-200">
+          <div className="planner-card p-8 border-blue-200 glow-pulse">
             <button
               onClick={() => setShowAddLecture(!showAddLecture)}
-              className="w-full flex items-center justify-center btn-primary"
+              className="w-full btn-primary"
             >
-              <Plus size={18} className="mr-2" />
-              {showAddLecture ? 'Cancel' : 'Add Extra Lecture'}
-              {showAddLecture ? <ChevronUp size={18} className="ml-2" /> : <ChevronDown size={18} className="ml-2" />}
+              <Plus size={20} className="mr-2" />
+              {showAddLecture ? '✖️ Cancel' : '📚 Add Extra Lecture'}
+              {showAddLecture ? <ChevronUp size={20} className="ml-2" /> : <ChevronDown size={20} className="ml-2" />}
             </button>
             
             {showAddLecture && (
@@ -752,14 +752,14 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Add New Club Activity */}
-          <div className="planner-card p-6 border-green-200">
+          <div className="planner-card p-8 border-green-200 glow-pulse">
             <button
               onClick={() => setShowAddActivity(!showAddActivity)}
-              className="w-full flex items-center justify-center btn-success"
+              className="w-full btn-success"
             >
-              <Plus size={18} className="mr-2" />
-              {showAddActivity ? 'Cancel' : 'Add Club Activity'}
-              {showAddActivity ? <ChevronUp size={18} className="ml-2" /> : <ChevronDown size={18} className="ml-2" />}
+              <Plus size={20} className="mr-2" />
+              {showAddActivity ? '✖️ Cancel' : '🎯 Add Club Activity'}
+              {showAddActivity ? <ChevronUp size={20} className="ml-2" /> : <ChevronDown size={20} className="ml-2" />}
             </button>
             
             {showAddActivity && (
@@ -803,10 +803,10 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Quick Stats */}
-          <div className="planner-card p-6 border-purple-200">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Target className="mr-2 text-purple-600" size={20} />
-              {selectedDay} Overview
+          <div className="planner-card p-8 border-purple-200 float-animation">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <Target className="mr-3" size={24} />
+              {selectedDay} Overview 📊
             </h2>
             <div className="space-y-3">
               <div className="stats-card stats-blue">

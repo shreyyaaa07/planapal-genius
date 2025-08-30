@@ -38,23 +38,33 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    /* College Planner Theme */
+    /* College Planner Theme - Enhanced */
     --planner-blue: 214 100% 60%;
+    --planner-blue-light: 214 100% 75%;
     --planner-blue-dark: 214 100% 45%;
     --planner-purple: 260 85% 65%;
+    --planner-purple-light: 260 85% 80%;
     --planner-purple-dark: 260 85% 50%;
     --planner-pink: 330 85% 65%;
+    --planner-pink-light: 330 85% 80%;
     --planner-pink-dark: 330 85% 50%;
     --planner-green: 150 85% 55%;
+    --planner-green-light: 150 85% 70%;
     --planner-green-dark: 150 85% 40%;
     --planner-yellow: 45 95% 60%;
+    --planner-yellow-light: 45 95% 75%;
     --planner-orange: 25 95% 60%;
+    --planner-orange-light: 25 95% 75%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--planner-blue)), hsl(var(--planner-purple)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--planner-purple)), hsl(var(--planner-pink)));
+    /* Impressive Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--planner-blue)), hsl(var(--planner-purple)), hsl(var(--planner-pink)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--planner-purple)), hsl(var(--planner-pink)), hsl(var(--planner-blue)));
     --gradient-success: linear-gradient(135deg, hsl(var(--planner-green)), hsl(var(--planner-blue)));
-    --gradient-bg: linear-gradient(135deg, hsl(225 60% 98%), hsl(260 60% 98%), hsl(330 60% 98%));
+    --gradient-bg: linear-gradient(135deg, hsl(225 60% 99%) 0%, hsl(260 60% 98%) 50%, hsl(330 60% 99%) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    --gradient-button: linear-gradient(135deg, hsl(var(--planner-blue)), hsl(var(--planner-purple)));
+    --gradient-button-hover: linear-gradient(135deg, hsl(var(--planner-blue-dark)), hsl(var(--planner-purple-dark)));
     
     /* Schedule Item Colors */
     --lecture-bg: linear-gradient(135deg, hsl(214 100% 97%), hsl(214 100% 93%));
@@ -66,10 +76,14 @@ All colors MUST be HSL.
     --break-bg: linear-gradient(135deg, hsl(25 95% 97%), hsl(25 95% 93%));
     --break-border: hsl(25 95% 60%);
 
-    /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--planner-purple) / 0.2);
-    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.1);
-    --shadow-hover: 0 8px 25px -8px hsl(var(--planner-blue) / 0.3);
+    /* Impressive Shadows */
+    --shadow-elegant: 0 25px 50px -12px hsl(var(--planner-purple) / 0.25);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.12);
+    --shadow-hover: 0 20px 40px -12px hsl(var(--planner-blue) / 0.4);
+    --shadow-glow: 0 0 40px hsl(var(--planner-purple) / 0.15);
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --shadow-button: 0 12px 24px -8px hsl(var(--planner-blue) / 0.3);
+    --shadow-button-hover: 0 16px 32px -8px hsl(var(--planner-purple) / 0.4);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -144,16 +158,33 @@ All colors MUST be HSL.
 @layer components {
   .planner-bg {
     background: var(--gradient-bg);
+    min-height: 100vh;
+    background-attachment: fixed;
   }
   
   .planner-card {
-    @apply bg-white rounded-2xl border border-gray-200;
-    box-shadow: var(--shadow-card);
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    @apply rounded-3xl border border-white/20;
+    box-shadow: var(--shadow-glass);
     transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .planner-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   }
   
   .planner-card:hover {
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
   }
   
   .gradient-text {
@@ -161,46 +192,132 @@ All colors MUST be HSL.
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease-in-out infinite;
   }
   
   .btn-primary {
-    background: var(--gradient-primary);
-    @apply text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg;
+    background: var(--gradient-button);
+    @apply text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300;
+    box-shadow: var(--shadow-button);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
   }
   
   .btn-primary:hover {
     @apply transform scale-105;
-    box-shadow: var(--shadow-hover);
+    background: var(--gradient-button-hover);
+    box-shadow: var(--shadow-button-hover);
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
   }
   
   .btn-success {
     background: var(--gradient-success);
-    @apply text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg;
+    @apply text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300;
+    box-shadow: var(--shadow-button);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
   }
   
   .btn-success:hover {
     @apply transform scale-105;
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-button-hover);
   }
   
   .schedule-lecture {
     background: var(--lecture-bg);
-    border-left: 4px solid var(--lecture-border);
+    border-left: 6px solid var(--lecture-border);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .schedule-lecture::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lecture-border), transparent);
+    opacity: 0.6;
   }
   
   .schedule-club {
     background: var(--club-bg);
-    border-left: 4px solid var(--club-border);
+    border-left: 6px solid var(--club-border);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .schedule-club::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--club-border), transparent);
+    opacity: 0.6;
   }
   
   .schedule-free {
     background: var(--free-bg);
-    border-left: 4px solid var(--free-border);
+    border-left: 6px solid var(--free-border);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .schedule-free::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--free-border), transparent);
+    opacity: 0.6;
   }
   
   .schedule-break {
     background: var(--break-bg);
-    border-left: 4px solid var(--break-border);
+    border-left: 6px solid var(--break-border);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .schedule-break::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--break-border), transparent);
+    opacity: 0.6;
   }
   
   .drag-preview {
@@ -214,27 +331,75 @@ All colors MUST be HSL.
   }
   
   .stats-card {
-    @apply p-4 rounded-xl;
+    @apply p-6 rounded-2xl;
     transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  }
+  
+  .stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
   }
   
   .stats-blue {
-    @apply bg-blue-50 text-blue-700;
+    background: linear-gradient(135deg, hsl(var(--planner-blue) / 0.1), hsl(var(--planner-blue-light) / 0.15));
+    color: hsl(var(--planner-blue-dark));
   }
   
   .stats-green {
-    @apply bg-green-50 text-green-700;
+    background: linear-gradient(135deg, hsl(var(--planner-green) / 0.1), hsl(var(--planner-green-light) / 0.15));
+    color: hsl(var(--planner-green-dark));
   }
   
   .stats-purple {
-    @apply bg-purple-50 text-purple-700;
+    background: linear-gradient(135deg, hsl(var(--planner-purple) / 0.1), hsl(var(--planner-purple-light) / 0.15));
+    color: hsl(var(--planner-purple-dark));
   }
   
   .stats-orange {
-    @apply bg-orange-50 text-orange-700;
+    background: linear-gradient(135deg, hsl(var(--planner-orange) / 0.1), hsl(var(--planner-orange-light) / 0.15));
+    color: hsl(var(--planner-orange));
   }
   
   .stats-yellow {
-    @apply bg-yellow-50 text-yellow-700;
+    background: linear-gradient(135deg, hsl(var(--planner-yellow) / 0.1), hsl(var(--planner-yellow-light) / 0.15));
+    color: hsl(var(--planner-yellow));
+  }
+  
+  /* New Impressive Animations */
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: var(--shadow-glow); }
+    50% { box-shadow: var(--shadow-elegant); }
+  }
+  
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .glow-pulse {
+    animation: glow-pulse 3s ease-in-out infinite;
   }
 }
