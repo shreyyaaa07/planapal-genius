@@ -38,6 +38,43 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    /* College Planner Theme */
+    --planner-blue: 214 100% 60%;
+    --planner-blue-dark: 214 100% 45%;
+    --planner-purple: 260 85% 65%;
+    --planner-purple-dark: 260 85% 50%;
+    --planner-pink: 330 85% 65%;
+    --planner-pink-dark: 330 85% 50%;
+    --planner-green: 150 85% 55%;
+    --planner-green-dark: 150 85% 40%;
+    --planner-yellow: 45 95% 60%;
+    --planner-orange: 25 95% 60%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--planner-blue)), hsl(var(--planner-purple)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--planner-purple)), hsl(var(--planner-pink)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--planner-green)), hsl(var(--planner-blue)));
+    --gradient-bg: linear-gradient(135deg, hsl(225 60% 98%), hsl(260 60% 98%), hsl(330 60% 98%));
+    
+    /* Schedule Item Colors */
+    --lecture-bg: linear-gradient(135deg, hsl(214 100% 97%), hsl(214 100% 93%));
+    --lecture-border: hsl(214 100% 60%);
+    --club-bg: linear-gradient(135deg, hsl(150 85% 97%), hsl(150 85% 93%));
+    --club-border: hsl(150 85% 55%);
+    --free-bg: linear-gradient(135deg, hsl(45 95% 97%), hsl(45 95% 93%));
+    --free-border: hsl(45 95% 60%);
+    --break-bg: linear-gradient(135deg, hsl(25 95% 97%), hsl(25 95% 93%));
+    --break-border: hsl(25 95% 60%);
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--planner-purple) / 0.2);
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.1);
+    --shadow-hover: 0 8px 25px -8px hsl(var(--planner-blue) / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -101,5 +138,103 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .planner-bg {
+    background: var(--gradient-bg);
+  }
+  
+  .planner-card {
+    @apply bg-white rounded-2xl border border-gray-200;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+  
+  .planner-card:hover {
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .gradient-text {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .btn-primary {
+    background: var(--gradient-primary);
+    @apply text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg;
+  }
+  
+  .btn-primary:hover {
+    @apply transform scale-105;
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .btn-success {
+    background: var(--gradient-success);
+    @apply text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg;
+  }
+  
+  .btn-success:hover {
+    @apply transform scale-105;
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .schedule-lecture {
+    background: var(--lecture-bg);
+    border-left: 4px solid var(--lecture-border);
+  }
+  
+  .schedule-club {
+    background: var(--club-bg);
+    border-left: 4px solid var(--club-border);
+  }
+  
+  .schedule-free {
+    background: var(--free-bg);
+    border-left: 4px solid var(--free-border);
+  }
+  
+  .schedule-break {
+    background: var(--break-bg);
+    border-left: 4px solid var(--break-border);
+  }
+  
+  .drag-preview {
+    @apply opacity-50 transform scale-95;
+    transition: var(--transition-fast);
+  }
+  
+  .drop-zone {
+    @apply h-2 rounded-full mb-2 animate-pulse;
+    background: var(--gradient-primary);
+  }
+  
+  .stats-card {
+    @apply p-4 rounded-xl;
+    transition: var(--transition-smooth);
+  }
+  
+  .stats-blue {
+    @apply bg-blue-50 text-blue-700;
+  }
+  
+  .stats-green {
+    @apply bg-green-50 text-green-700;
+  }
+  
+  .stats-purple {
+    @apply bg-purple-50 text-purple-700;
+  }
+  
+  .stats-orange {
+    @apply bg-orange-50 text-orange-700;
+  }
+  
+  .stats-yellow {
+    @apply bg-yellow-50 text-yellow-700;
   }
 }
