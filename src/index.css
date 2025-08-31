@@ -38,52 +38,52 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    /* College Planner Theme - Enhanced */
-    --planner-blue: 214 100% 60%;
-    --planner-blue-light: 214 100% 75%;
-    --planner-blue-dark: 214 100% 45%;
-    --planner-purple: 260 85% 65%;
-    --planner-purple-light: 260 85% 80%;
-    --planner-purple-dark: 260 85% 50%;
-    --planner-pink: 330 85% 65%;
-    --planner-pink-light: 330 85% 80%;
-    --planner-pink-dark: 330 85% 50%;
-    --planner-green: 150 85% 55%;
-    --planner-green-light: 150 85% 70%;
-    --planner-green-dark: 150 85% 40%;
-    --planner-yellow: 45 95% 60%;
-    --planner-yellow-light: 45 95% 75%;
-    --planner-orange: 25 95% 60%;
-    --planner-orange-light: 25 95% 75%;
+    /* Academic Planner - Professional Theme */
+    --academic-blue: 220 85% 55%;
+    --academic-blue-light: 220 85% 65%;
+    --academic-blue-dark: 220 85% 45%;
+    --academic-teal: 185 85% 50%;
+    --academic-teal-light: 185 85% 60%;
+    --academic-teal-dark: 185 85% 40%;
+    --academic-green: 145 75% 45%;
+    --academic-green-light: 145 75% 55%;
+    --academic-green-dark: 145 75% 35%;
+    --academic-amber: 45 85% 55%;
+    --academic-amber-light: 45 85% 65%;
+    --academic-orange: 25 85% 55%;
+    --academic-orange-light: 25 85% 65%;
+    --academic-slate: 220 10% 60%;
+    --academic-slate-light: 220 10% 70%;
+    --academic-slate-dark: 220 10% 50%;
     
-    /* Impressive Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--planner-blue)), hsl(var(--planner-purple)), hsl(var(--planner-pink)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--planner-purple)), hsl(var(--planner-pink)), hsl(var(--planner-blue)));
-    --gradient-success: linear-gradient(135deg, hsl(var(--planner-green)), hsl(var(--planner-blue)));
-    --gradient-bg: linear-gradient(135deg, hsl(225 60% 99%) 0%, hsl(260 60% 98%) 50%, hsl(330 60% 99%) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-    --gradient-button: linear-gradient(135deg, hsl(var(--planner-blue)), hsl(var(--planner-purple)));
-    --gradient-button-hover: linear-gradient(135deg, hsl(var(--planner-blue-dark)), hsl(var(--planner-purple-dark)));
+    /* Professional Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--academic-blue)), hsl(var(--academic-teal)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--academic-teal)), hsl(var(--academic-blue)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--academic-green)), hsl(var(--academic-teal)));
+    --gradient-bg: linear-gradient(135deg, hsl(220 30% 98%) 0%, hsl(185 30% 97%) 50%, hsl(145 30% 98%) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+    --gradient-button: linear-gradient(135deg, hsl(var(--academic-blue)), hsl(var(--academic-teal)));
+    --gradient-button-hover: linear-gradient(135deg, hsl(var(--academic-blue-dark)), hsl(var(--academic-teal-dark)));
     
     /* Schedule Item Colors */
-    --lecture-bg: linear-gradient(135deg, hsl(214 100% 97%), hsl(214 100% 93%));
-    --lecture-border: hsl(214 100% 60%);
-    --club-bg: linear-gradient(135deg, hsl(150 85% 97%), hsl(150 85% 93%));
-    --club-border: hsl(150 85% 55%);
-    --free-bg: linear-gradient(135deg, hsl(45 95% 97%), hsl(45 95% 93%));
-    --free-border: hsl(45 95% 60%);
-    --break-bg: linear-gradient(135deg, hsl(25 95% 97%), hsl(25 95% 93%));
-    --break-border: hsl(25 95% 60%);
+    --lecture-bg: linear-gradient(135deg, hsl(var(--academic-blue) / 0.08), hsl(var(--academic-blue) / 0.12));
+    --lecture-border: hsl(var(--academic-blue));
+    --club-bg: linear-gradient(135deg, hsl(var(--academic-green) / 0.08), hsl(var(--academic-green) / 0.12));
+    --club-border: hsl(var(--academic-green));
+    --free-bg: linear-gradient(135deg, hsl(var(--academic-amber) / 0.08), hsl(var(--academic-amber) / 0.12));
+    --free-border: hsl(var(--academic-amber));
+    --break-bg: linear-gradient(135deg, hsl(var(--academic-orange) / 0.08), hsl(var(--academic-orange) / 0.12));
+    --break-border: hsl(var(--academic-orange));
 
-    /* Impressive Shadows */
-    --shadow-elegant: 0 25px 50px -12px hsl(var(--planner-purple) / 0.25);
-    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.12);
-    --shadow-hover: 0 20px 40px -12px hsl(var(--planner-blue) / 0.4);
-    --shadow-glow: 0 0 40px hsl(var(--planner-purple) / 0.15);
-    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    --shadow-button: 0 12px 24px -8px hsl(var(--planner-blue) / 0.3);
-    --shadow-button-hover: 0 16px 32px -8px hsl(var(--planner-purple) / 0.4);
+    /* Professional Shadows */
+    --shadow-elegant: 0 20px 40px -12px hsl(var(--academic-teal) / 0.15);
+    --shadow-card: 0 6px 24px -6px hsl(0 0% 0% / 0.08);
+    --shadow-hover: 0 16px 32px -8px hsl(var(--academic-blue) / 0.2);
+    --shadow-glow: 0 0 30px hsl(var(--academic-teal) / 0.1);
+    --shadow-glass: 0 6px 24px 0 rgba(31, 38, 135, 0.2);
+    --shadow-button: 0 8px 20px -6px hsl(var(--academic-blue) / 0.2);
+    --shadow-button-hover: 0 12px 28px -6px hsl(var(--academic-teal) / 0.25);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -355,28 +355,28 @@ All colors MUST be HSL.
   }
   
   .stats-blue {
-    background: linear-gradient(135deg, hsl(var(--planner-blue) / 0.1), hsl(var(--planner-blue-light) / 0.15));
-    color: hsl(var(--planner-blue-dark));
+    background: linear-gradient(135deg, hsl(var(--academic-blue) / 0.1), hsl(var(--academic-blue-light) / 0.12));
+    color: hsl(var(--academic-blue-dark));
   }
   
   .stats-green {
-    background: linear-gradient(135deg, hsl(var(--planner-green) / 0.1), hsl(var(--planner-green-light) / 0.15));
-    color: hsl(var(--planner-green-dark));
+    background: linear-gradient(135deg, hsl(var(--academic-green) / 0.1), hsl(var(--academic-green-light) / 0.12));
+    color: hsl(var(--academic-green-dark));
   }
   
-  .stats-purple {
-    background: linear-gradient(135deg, hsl(var(--planner-purple) / 0.1), hsl(var(--planner-purple-light) / 0.15));
-    color: hsl(var(--planner-purple-dark));
+  .stats-teal {
+    background: linear-gradient(135deg, hsl(var(--academic-teal) / 0.1), hsl(var(--academic-teal-light) / 0.12));
+    color: hsl(var(--academic-teal-dark));
   }
   
   .stats-orange {
-    background: linear-gradient(135deg, hsl(var(--planner-orange) / 0.1), hsl(var(--planner-orange-light) / 0.15));
-    color: hsl(var(--planner-orange));
+    background: linear-gradient(135deg, hsl(var(--academic-orange) / 0.1), hsl(var(--academic-orange-light) / 0.12));
+    color: hsl(var(--academic-orange));
   }
   
-  .stats-yellow {
-    background: linear-gradient(135deg, hsl(var(--planner-yellow) / 0.1), hsl(var(--planner-yellow-light) / 0.15));
-    color: hsl(var(--planner-yellow));
+  .stats-amber {
+    background: linear-gradient(135deg, hsl(var(--academic-amber) / 0.1), hsl(var(--academic-amber-light) / 0.12));
+    color: hsl(var(--academic-amber));
   }
   
   /* New Impressive Animations */

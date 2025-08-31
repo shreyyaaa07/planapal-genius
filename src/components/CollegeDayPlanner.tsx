@@ -14,8 +14,25 @@ import {
   BookOpen, 
   Target, 
   TrendingUp, 
-  Award 
+  Award,
+  BarChart3,
+  PieChart,
+  Activity
 } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line
+} from 'recharts';
 
 interface ScheduleItem {
   subject: string;
@@ -56,6 +73,19 @@ const CollegeDayPlanner = () => {
     'Basic Electrical Engineering',
     'Procedural Programming',
     'Electronics'
+  ];
+
+  const clubActivitiesList = [
+    'Dance Club Practice',
+    'Sports Club Training',
+    'Writing Club Workshop',
+    'Drama Club Rehearsal',
+    'Music Club Session',
+    'Art Club Meeting',
+    'Tech Club Workshop',
+    'Photography Club',
+    'Literature Club Discussion',
+    'Science Club Experiment'
   ];
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -131,10 +161,10 @@ const CollegeDayPlanner = () => {
       { name: 'Writing Club Workshop', time: '17:00', location: 'Library Hall', duration: 60, travelTime: 3 }
     ],
     Friday: [
-      { name: 'Dance Club Performance Prep', time: '16:30', location: 'Dance Studio', duration: 30, travelTime: 5 }
+      { name: 'Dance Club Practice', time: '16:30', location: 'Dance Studio', duration: 30, travelTime: 5 }
     ],
     Saturday: [
-      { name: 'Sports Club Match', time: '16:30', location: 'Sports Ground', duration: 60, travelTime: 8 }
+      { name: 'Sports Club Training', time: '16:30', location: 'Sports Ground', duration: 60, travelTime: 8 }
     ]
   });
 
@@ -212,6 +242,7 @@ const CollegeDayPlanner = () => {
   const handleDragStart = (e: React.DragEvent, item: any, index: number) => {
     setDraggedItem({ ...item, originalIndex: index });
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', '');
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
@@ -355,7 +386,7 @@ const CollegeDayPlanner = () => {
   };
 
   const getScheduleItemClasses = (type: string) => {
-    const baseClasses = "group rounded-xl p-4 transition-all duration-300 hover:shadow-lg";
+    const baseClasses = "group rounded-xl p-4 transition-all duration-300 hover:shadow-lg cursor-grab active:cursor-grabbing";
     switch (type) {
       case 'lecture':
         return `${baseClasses} schedule-lecture`;
@@ -364,30 +395,62 @@ const CollegeDayPlanner = () => {
       case 'free':
         return `${baseClasses} schedule-free`;
       case 'break':
-        return `${baseClasses} schedule-break`;
+        return `${baseClasses} schedule-break cursor-default`;
       default:
         return baseClasses;
     }
   };
 
+  // Chart data preparation
+  const getChartData = () => {
+    const overview = getWeekOverview();
+    
+    const weeklyData = days.slice(0, 6).map(day => ({
+      day: day.slice(0, 3),
+      lectures: overview.daily[day]?.lectures || 0,
+      studyHours: Math.round(overview.daily[day]?.lectureTime / 60 * 10) / 10 || 0,
+      clubHours: Math.round(overview.daily[day]?.clubTime / 60 * 10) / 10 || 0
+    }));
+
+    const subjectData = overview.weekly.subjectsStudied.map((subject: string) => {
+      let count = 0;
+      days.slice(0, 6).forEach(day => {
+        count += subjectSchedule[day]?.filter(item => item.subject === subject && item.type === 'lecture').length || 0;
+      });
+      return {
+        name: subject.split(' ')[0] + (subject.split(' ')[1] ? ' ' + subject.split(' ')[1] : ''),
+        value: count
+      };
+    });
+
+    const timeDistribution = [
+      { name: 'Study Time', value: overview.weekly.totalStudyTime, color: '#3B82F6' },
+      { name: 'Club Time', value: Math.round(overview.weekly.totalClubTime / 60 * 10) / 10, color: '#10B981' },
+      { name: 'Free Time', value: 15, color: '#F59E0B' }
+    ];
+
+    return { weeklyData, subjectData, timeDistribution };
+  };
+
   if (selectedDay === 'Sunday') {
     const overview = getWeekOverview();
+    const chartData = getChartData();
     
     return (
       <div className="max-w-7xl mx-auto p-6 planner-bg min-h-screen">
-        <div className="planner-card p-8 mb-6 border-purple-200 float-animation">
-          <h1 className="text-5xl font-bold gradient-text mb-4">
-            📊 Weekly Overview
+        <div className="planner-card p-8 mb-6">
+          <h1 className="text-5xl font-bold gradient-text mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+            📊 Weekly Academic Analytics
           </h1>
-          <p className="text-muted-foreground text-xl">Your complete week at a glance</p>
+          <p className="text-muted-foreground text-xl">Comprehensive insights into your academic performance</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {/* Weekly Stats */}
-          <div className="planner-card p-8 border-blue-200 glow-pulse">
-            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
-              <TrendingUp className="mr-3" size={32} />
-              Weekly Stats
+          <div className="planner-card p-6">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <TrendingUp className="mr-3" size={24} />
+              Weekly Statistics
             </h2>
             <div className="space-y-4">
               <div className="stats-card stats-blue">
@@ -402,31 +465,118 @@ const CollegeDayPlanner = () => {
                   <span className="text-2xl font-bold">{overview.weekly.totalStudyTime}h</span>
                 </div>
               </div>
-              <div className="stats-card stats-purple">
+              <div className="stats-card stats-teal">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Club Hours</span>
                   <span className="text-2xl font-bold">{Math.round(overview.weekly.totalClubTime / 60 * 10) / 10}h</span>
                 </div>
               </div>
-              <div className="stats-card stats-orange">
+              <div className="stats-card stats-amber">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Avg Daily Study</span>
+                  <span className="font-medium">Daily Average</span>
                   <span className="text-2xl font-bold">{overview.weekly.averageDailyStudy}h</span>
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Daily Activity Chart */}
+          <div className="planner-card p-6">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <BarChart3 className="mr-3" size={24} />
+              Daily Activity
+            </h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={chartData.weeklyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e0e7ff" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                    border: 'none', 
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Bar dataKey="lectures" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="studyHours" fill="#10B981" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Subject Distribution */}
+          <div className="planner-card p-6">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <PieChart className="mr-3" size={24} />
+              Subject Focus
+            </h2>
+            <ResponsiveContainer width="100%" height={250}>
+              <RechartsPieChart>
+                <Pie
+                  data={chartData.subjectData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={40}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {chartData.subjectData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'][index % 6]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </RechartsPieChart>
+            </ResponsiveContainer>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {chartData.subjectData.slice(0, 4).map((subject, index) => (
+                <div key={index} className="flex items-center text-sm">
+                  <div 
+                    className="w-3 h-3 rounded-full mr-2" 
+                    style={{ backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'][index] }}
+                  ></div>
+                  <span className="truncate">{subject.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Time Distribution Chart */}
+          <div className="planner-card p-6">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <Activity className="mr-3" size={24} />
+              Weekly Trends
+            </h2>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={chartData.weeklyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e0e7ff" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                    border: 'none', 
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Line type="monotone" dataKey="studyHours" stroke="#3B82F6" strokeWidth={3} dot={{ fill: '#3B82F6', strokeWidth: 2, r: 4 }} />
+                <Line type="monotone" dataKey="clubHours" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
           {/* Subjects Covered */}
-          <div className="planner-card p-8 border-green-200 glow-pulse">
-            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
-              <BookOpen className="mr-3" size={32} />
+          <div className="planner-card p-6">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <BookOpen className="mr-3" size={24} />
               Subjects This Week
             </h2>
             <div className="space-y-3">
               {overview.weekly.subjectsStudied.map((subject: string, index: number) => (
-                <div key={index} className="flex items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                <div key={index} className="flex items-center p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                   <span className="text-gray-800 font-medium">{subject}</span>
                 </div>
               ))}
@@ -434,109 +584,65 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Club Activities */}
-          <div className="planner-card p-8 border-purple-200 glow-pulse">
-            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
-              <Award className="mr-3" size={32} />
-              Clubs Attended
+          <div className="planner-card p-6">
+            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <Award className="mr-3" size={24} />
+              Club Participation
             </h2>
             <div className="space-y-3">
               {overview.weekly.clubsAttended.map((club: string, index: number) => (
-                <div key={index} className="flex items-center p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                <div key={index} className="flex items-center p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                   <span className="text-gray-800 font-medium">{club} Club</span>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Daily Breakdown */}
-          <div className="lg:col-span-2 xl:col-span-3">
-            <div className="planner-card p-8 border-gray-200 float-animation">
-              <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
-                <Calendar className="mr-3" size={32} />
-                Daily Breakdown
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {days.slice(0, 6).map(day => (
-                  <div key={day} className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">{day}</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Lectures:</span>
-                        <span className="font-semibold text-blue-600">{overview.daily[day].lectures}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Study Time:</span>
-                        <span className="font-semibold text-green-600">{Math.round(overview.daily[day].lectureTime / 60 * 10) / 10}h</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Club Time:</span>
-                        <span className="font-semibold text-purple-600">{Math.round(overview.daily[day].clubTime / 60 * 10) / 10}h</span>
-                      </div>
-                      <div className="mt-2 pt-2 border-t border-gray-300">
-                        <p className="text-xs text-gray-500 mb-1">Subjects:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {overview.daily[day].subjects.slice(0, 3).map((subject: string, index: number) => (
-                            <span key={index} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                              {subject.split(' ')[0]}
-                            </span>
-                          ))}
-                          {overview.daily[day].subjects.length > 3 && (
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                              +{overview.daily[day].subjects.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Back Button */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-8">
           <button
             onClick={() => setSelectedDay('Monday')}
-            className="btn-primary text-xl"
+            className="btn-primary"
           >
-            ✨ Back to Schedule
+            Back to Schedule
           </button>
         </div>
       </div>
     );
   }
 
+  const scheduleItems = getAllScheduleItems();
+
   return (
     <div className="max-w-7xl mx-auto p-6 planner-bg min-h-screen">
       {/* Header */}
-      <div className="planner-card p-10 mb-8 border-purple-200 float-animation">
-        <h1 className="text-6xl font-bold gradient-text mb-6">
-          📚 My College Day Planner
+      <div className="planner-card p-8 mb-6">
+        <h1 className="text-5xl font-bold gradient-text mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          📚 Weekly Academic Planner
         </h1>
-        <p className="text-muted-foreground text-xl">Organize your academic life with style and efficiency ✨</p>
+        <p className="text-muted-foreground text-xl">Organize your academic life with precision and style</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* Main Schedule Area */}
         <div className="xl:col-span-3">
           {/* Day Selector */}
-          <div className="planner-card p-8 mb-8 border-blue-200 glow-pulse">
-            <h2 className="text-3xl font-bold gradient-text mb-8 flex items-center">
-              <Calendar className="mr-4" size={32} />
+          <div className="planner-card p-6 mb-6">
+            <h2 className="text-2xl font-semibold mb-6 flex items-center gradient-text">
+              <Calendar className="mr-3" size={24} />
               Select Day
             </h2>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               {days.map(day => (
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day)}
-                  className={`px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-filter backdrop-blur-10 border ${
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     selectedDay === day
-                      ? 'btn-primary transform scale-110'
-                      : 'bg-white/60 text-foreground border-white/30 hover:bg-white/80 hover:scale-105 hover:shadow-lg'
+                      ? 'btn-primary'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
                   }`}
                 >
                   {day}
@@ -546,16 +652,16 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Schedule Display */}
-          <div className="planner-card border-gray-200 float-animation">
-            <div className="p-8 border-b border-white/20">
-              <h2 className="text-3xl font-bold gradient-text flex items-center">
-                <Clock className="mr-4" size={32} />
-                {selectedDay} Schedule ✨
+          <div className="planner-card">
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-2xl font-semibold flex items-center gradient-text">
+                <Clock className="mr-3" size={24} />
+                {selectedDay} Schedule
               </h2>
             </div>
-            <div className="h-96 overflow-y-auto p-8">
+            <div className="p-6">
               <div className="space-y-3">
-                {getAllScheduleItems().map((item, idx) => (
+                {scheduleItems.map((item, idx) => (
                   <div key={item.id}>
                     {dragOverIndex === idx && (
                       <div className="drop-zone" />
@@ -568,7 +674,7 @@ const CollegeDayPlanner = () => {
                       onDrop={(e) => handleDrop(e, idx)}
                       className={`${getScheduleItemClasses(item.type)} ${
                         draggedItem?.id === item.id ? 'drag-preview' : 'hover:transform hover:scale-102'
-                      } ${item.type !== 'break' ? 'cursor-move' : ''}`}
+                      }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
@@ -577,7 +683,7 @@ const CollegeDayPlanner = () => {
                               type="checkbox"
                               checked={checkedItems[item.id] || false}
                               onChange={() => toggleCheck(item.id)}
-                              className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                             />
                           )}
                           <div className="flex-1">
@@ -706,18 +812,18 @@ const CollegeDayPlanner = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Add New Lecture */}
-          <div className="planner-card p-8 border-blue-200 glow-pulse">
+          <div className="planner-card p-6">
             <button
               onClick={() => setShowAddLecture(!showAddLecture)}
-              className="w-full btn-primary"
+              className="w-full flex items-center justify-center btn-primary"
             >
-              <Plus size={20} className="mr-2" />
-              {showAddLecture ? '✖️ Cancel' : '📚 Add Extra Lecture'}
-              {showAddLecture ? <ChevronUp size={20} className="ml-2" /> : <ChevronDown size={20} className="ml-2" />}
+              <Plus size={18} className="mr-2" />
+              {showAddLecture ? 'Cancel' : 'Add Extra Lecture'}
+              {showAddLecture ? <ChevronUp size={18} className="ml-2" /> : <ChevronDown size={18} className="ml-2" />}
             </button>
             
             {showAddLecture && (
-              <div className="mt-6 space-y-4 animate-fade-in">
+              <div className="mt-6 space-y-4">
                 <select
                   value={newLecture.subject}
                   onChange={(e) => setNewLecture({...newLecture, subject: e.target.value})}
@@ -725,7 +831,7 @@ const CollegeDayPlanner = () => {
                 >
                   <option value="">Select Subject</option>
                   {subjects.map(subject => (
-                    <option key={subject} value={subject}>• {subject}</option>
+                    <option key={subject} value={subject}>{subject}</option>
                   ))}
                 </select>
                 <input
@@ -752,25 +858,28 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Add New Club Activity */}
-          <div className="planner-card p-8 border-green-200 glow-pulse">
+          <div className="planner-card p-6">
             <button
               onClick={() => setShowAddActivity(!showAddActivity)}
-              className="w-full btn-success"
+              className="w-full flex items-center justify-center btn-success"
             >
-              <Plus size={20} className="mr-2" />
-              {showAddActivity ? '✖️ Cancel' : '🎯 Add Club Activity'}
-              {showAddActivity ? <ChevronUp size={20} className="ml-2" /> : <ChevronDown size={20} className="ml-2" />}
+              <Plus size={18} className="mr-2" />
+              {showAddActivity ? 'Cancel' : 'Add Club Activity'}
+              {showAddActivity ? <ChevronUp size={18} className="ml-2" /> : <ChevronDown size={18} className="ml-2" />}
             </button>
             
             {showAddActivity && (
-              <div className="mt-6 space-y-4 animate-fade-in">
-                <input
-                  type="text"
-                  placeholder="Activity name"
+              <div className="mt-6 space-y-4">
+                <select
                   value={newActivity.name}
                   onChange={(e) => setNewActivity({...newActivity, name: e.target.value})}
                   className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
+                >
+                  <option value="">Select Activity</option>
+                  {clubActivitiesList.map(activity => (
+                    <option key={activity} value={activity}>{activity}</option>
+                  ))}
+                </select>
                 <input
                   type="time"
                   value={newActivity.time}
@@ -784,17 +893,21 @@ const CollegeDayPlanner = () => {
                   onChange={(e) => setNewActivity({...newActivity, location: e.target.value})}
                   className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
-                <select
-                  value={newActivity.duration}
-                  onChange={(e) => setNewActivity({...newActivity, duration: parseInt(e.target.value)})}
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value={30}>30 minutes</option>
-                  <option value={60}>1 hour</option>
-                </select>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Duration (minutes)</label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="120"
+                    value={newActivity.duration}
+                    onChange={(e) => setNewActivity({...newActivity, duration: parseInt(e.target.value)})}
+                    className="w-full"
+                  />
+                  <div className="text-center text-sm text-gray-600">{newActivity.duration} minutes</div>
+                </div>
                 <button
                   onClick={addClubActivity}
-                  className="w-full btn-primary"
+                  className="w-full btn-success"
                 >
                   Add Activity
                 </button>
@@ -803,10 +916,10 @@ const CollegeDayPlanner = () => {
           </div>
 
           {/* Quick Stats */}
-          <div className="planner-card p-8 border-purple-200 float-animation">
-            <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center">
-              <Target className="mr-3" size={24} />
-              {selectedDay} Overview 📊
+          <div className="planner-card p-6">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gradient-text">
+              <Target className="mr-2" size={20} />
+              {selectedDay} Overview
             </h2>
             <div className="space-y-3">
               <div className="stats-card stats-blue">
@@ -821,13 +934,13 @@ const CollegeDayPlanner = () => {
                   <span className="font-bold">{(clubActivities[selectedDay] || []).length}</span>
                 </div>
               </div>
-              <div className="stats-card stats-yellow">
+              <div className="stats-card stats-amber">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Free Slots:</span>
                   <span className="font-bold">{subjectSchedule[selectedDay]?.filter(item => item.type === 'free').length || 0}</span>
                 </div>
               </div>
-              <div className="stats-card stats-purple">
+              <div className="stats-card stats-teal">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Completed:</span>
                   <span className="font-bold">
