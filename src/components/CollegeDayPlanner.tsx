@@ -264,20 +264,47 @@ const CollegeDayPlanner = () => {
       return;
     }
 
-    if (draggedItem.itemType === 'lecture') {
+    // Get the current items based on sorted order, not the original order
+    const allItems = getAllScheduleItems();
+    const draggedScheduleItem = allItems[draggedItem.originalIndex];
+    const targetScheduleItem = allItems[targetIndex];
+
+    if (draggedScheduleItem.itemType === 'lecture') {
       const updatedSchedule = { ...subjectSchedule };
-      const items = [...updatedSchedule[selectedDay]];
-      const [movedItem] = items.splice(draggedItem.originalIndex, 1);
-      items.splice(targetIndex, 0, movedItem);
-      updatedSchedule[selectedDay] = items;
-      setSubjectSchedule(updatedSchedule);
-    } else if (draggedItem.itemType === 'activity') {
+      const dayItems = [...updatedSchedule[selectedDay]];
+      
+      // Find the actual indices in the day array
+      const draggedActualIndex = dayItems.findIndex((item, index) => 
+        `lecture-${selectedDay}-${index}` === draggedScheduleItem.id
+      );
+      const targetActualIndex = dayItems.findIndex((item, index) => 
+        `lecture-${selectedDay}-${index}` === targetScheduleItem.id
+      );
+      
+      if (draggedActualIndex !== -1 && targetActualIndex !== -1) {
+        const [movedItem] = dayItems.splice(draggedActualIndex, 1);
+        dayItems.splice(targetActualIndex, 0, movedItem);
+        updatedSchedule[selectedDay] = dayItems;
+        setSubjectSchedule(updatedSchedule);
+      }
+    } else if (draggedScheduleItem.itemType === 'activity') {
       const updatedActivities = { ...clubActivities };
-      const items = [...updatedActivities[selectedDay]];
-      const [movedItem] = items.splice(draggedItem.originalIndex, 1);
-      items.splice(targetIndex, 0, movedItem);
-      updatedActivities[selectedDay] = items;
-      setClubActivities(updatedActivities);
+      const dayItems = [...updatedActivities[selectedDay]];
+      
+      // Find the actual indices in the day array
+      const draggedActualIndex = dayItems.findIndex((item, index) => 
+        `activity-${selectedDay}-${index}` === draggedScheduleItem.id
+      );
+      const targetActualIndex = dayItems.findIndex((item, index) => 
+        `activity-${selectedDay}-${index}` === targetScheduleItem.id
+      );
+      
+      if (draggedActualIndex !== -1 && targetActualIndex !== -1) {
+        const [movedItem] = dayItems.splice(draggedActualIndex, 1);
+        dayItems.splice(targetActualIndex, 0, movedItem);
+        updatedActivities[selectedDay] = dayItems;
+        setClubActivities(updatedActivities);
+      }
     }
 
     setDraggedItem(null);
@@ -619,9 +646,9 @@ const CollegeDayPlanner = () => {
     <div className="max-w-7xl mx-auto p-6 planner-bg min-h-screen">
       {/* Header */}
       <div className="planner-card p-8 mb-6">
-        <h1 className="text-5xl font-bold gradient-text mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-          📚 Weekly Academic Planner
-        </h1>
+          <h1 className="text-5xl font-bold gradient-text mb-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+            Weekly Academic Planner
+          </h1>
         <p className="text-muted-foreground text-xl">Organize your academic life with precision and style</p>
       </div>
 
@@ -726,7 +753,7 @@ const CollegeDayPlanner = () => {
                                       {item.itemType === 'lecture' && (
                                         <div className="border-t border-gray-200 mt-2 pt-2">
                                           <p className="px-4 py-1 text-sm text-gray-500 font-medium">Move to:</p>
-                                          {days.filter(day => day !== selectedDay && day !== 'Sunday').map(day => (
+                                          {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].filter(day => day !== selectedDay).map(day => (
                                             <button
                                               key={day}
                                               onClick={() => {
